@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -47,8 +47,20 @@ class AuthController extends Controller
         return response('', 204);
     }
 
-    public function register()
+    public function register(Request $request)
     {
-        return 'Register';
+      $fields= $request->validate([
+        'name'=>'required|max:255',
+        'email'=>'required|email|unique:users',
+        'password'=>'required|confirmed'
+      ]);
+    
+      $user= User::create($fields);
+      $token = $user->createToken($request->name);
+
+      return[
+        'user'=> $user,
+        'token'=>$token->plainTextToken
+      ];
     }
 }

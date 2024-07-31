@@ -29,7 +29,7 @@ class ProductsController extends Controller
             'price'=>'required',
     ]);
     $product= Products::create($fields);
-        return ['product'=>$product];
+        return $product;
     }
 
     /**
@@ -43,16 +43,25 @@ class ProductsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Products $products)
+    public function update(Request $request, Products $product)
     {
-        //
+        $fields=  $request->validate([
+            'title'=>'required|max:255',
+            'description'=>'required',
+            'slug'=>'required',
+            'price'=>'required',
+    ]);
+         $product->update($fields);
+        return $product;
+    
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Products $products)
+    public function destroy(Products $product)
     {
-        //
+        $product-> delete();
+         return ['Message'=> "Deleted Post ".$product["id"]];
     }
 }
