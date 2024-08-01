@@ -59,8 +59,10 @@ class ProductsPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Products $products): bool
+    public function modify(User $user, Products $product): Response
     {
-        //
+        return $user->id === $product->user_id
+               ? Response::allow()
+               : Response::deny("You dont own this post");
     }
 }
