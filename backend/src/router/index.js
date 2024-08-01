@@ -36,7 +36,7 @@ const routes=[
         name:'login',
         component: Login,
         meta:{
-          requiresGuest: true
+          requiresGuest: false
 
         }
     },
