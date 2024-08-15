@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http\Resources;
 
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Nette\Utils\DateTime;
 
-class Admin
+class UserResource extends JsonResource
 {
+    public static $wrap = false;
+
     /**
-     * Handle an incoming request.
+     * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @param \Illuminate\Http\Request $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function handle(Request $request, Closure $next)
+    public function toArray($request)
     {
-        if (Auth::user() && Auth::user()->is_admin == 1) {
-            return $next($request);
-        }
-        return response([
-            'message' => 'You don\'t have permission to perform this action'
-        ], 403);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'created_at' => (new DateTime($this->created_at))->format('Y-m-d H:i:s'),
+        ];
     }
 }

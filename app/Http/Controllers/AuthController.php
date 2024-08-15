@@ -5,13 +5,50 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    
+
+    public function logout(Request $request)
     {
+        
+        $request->user()->tokens()->delete();
+        return [
+            'message'=>'You are logged out'
+        ];
+
+    }
+
+    public function register_new(Request $request)
+    {
+
+    Log::info('Login request data:', $request->all());
+        
+      $fields= $request->validate([
+        'name'=>'required|max:255',
+        'email'=>['required', 'email'],
+        'email_verified_at'=>now(),
+        'password'=>'required',
+       
+
+      ]);
+    
+      $user= User::create($fields);
+      $token = $user->createToken($request->name);
+
+      return[
+        'user'=> $user,
+        'token'=>$token->plainTextToken
+      ];
+    }
+    public function login_new(Request $request){
+        
         $credentials = $request->validate([
-            'email'=> ['required', 'email','exists:users'],
+            
+            'email'=> ['required', 'email'],
             'password' => 'required',
             'remember' => 'boolean'
         ]);
@@ -31,59 +68,16 @@ class AuthController extends Controller
                 'message' => 'You don\'t have permission to authenticate as admin'
             ], 403);
         }
+        if (!$user->email_verified_at) {
+            Auth::logout();
+            return response([
+                'message' => 'Your email address is not verified'
+            ], 403);
+        }
         $token = $user->createToken('main')->plainTextToken;
         return response([
             'user' => $user,
             'token' => $token
         ]);
-
-    }
-
-    public function logout(Request $request)
-    {
-        
-        $request->user()->tokens()->delete();
-        return [
-            'message'=>'You are logged out'
-        ];
-
-    }
-
-    public function register(Request $request)
-    {
-      $fields= $request->validate([
-        'name'=>'required|max:255',
-        'email'=>'required|email|unique:users',
-        'password'=>'required|confirmed'
-      ]);
-    
-      $user= User::create($fields);
-      $token = $user->createToken($request->name);
-
-      return[
-        'user'=> $user,
-        'token'=>$token->plainTextToken
-      ];
-    }
-    public function login2(Request $request){
-        
-        $request->validate([
-            'email'=> ['required', 'email','exists:users'],
-            'password' => 'required',
-           
-        ]);
-        $user = User::where('email', $request->email)->first();
-       
-        if(!$user || Hash::check($request->password,$user->password)){
-            return[
-                'message'=>"The provided credentials are incorrect"
-            ];
-        }
-        $token = $user->createToken($user->name);
-
-        return[
-          'user'=> $user,
-          'token'=>$token->plainTextToken
-        ];
     }
 }

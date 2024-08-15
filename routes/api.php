@@ -4,13 +4,19 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('products',ProductsController::class);
+Route::post('/test', function () {
+    return 'This is a test route';
+});
+Route::post('/login', [AuthController::class, 'login_new']);
+Route::post('/register', [AuthController::class, 'register_new']);
 
-Route::get('/users', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/login2', [AuthController::class, 'login2']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::middleware(['auth:sanctum','admin'])->group( function(){
+
+    Route::get('/users', function (Request $request) {
+        return $request->user();
+    });
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+
+});

@@ -9,14 +9,18 @@ import NotFound from "../views/NotFound.vue";
 import store from "../store";
 
 const routes=[
+    {
+      path:'/',
+      redirect:'/app'
 
-
+    },
     {
         path: '/app',
         name: 'app',
+        redirect:'/app/dashboard',
         component: AppLayout,
         meta: {
-          requiresAuth: false
+          requiresAuth: true
         },
         children: [
           {
@@ -64,11 +68,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
     if (to.meta.requiresAuth && !store.state.user.token) {
+
       next({name: 'login'})
+
     } else if (to.meta.requiresGuest && store.state.user.token) {
+
       next({name: 'app.dashboard'})
+
     } else {
+
       next();
     }
   

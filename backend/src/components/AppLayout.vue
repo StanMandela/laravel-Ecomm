@@ -1,6 +1,6 @@
 <template>
-  <body>
-    <div class="min-h-full bg-gray-200 flex">
+  <body class="h-full">
+    <div class="min-h-full flex bg-gray-200 flex">
       <!--    Sidebar-->
       <Sidebar :class="{'-ml-[200px]': !sidebarOpened}"/>
       <!--/    Sidebar-->
