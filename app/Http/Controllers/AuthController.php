@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 
 
 class AuthController extends Controller
@@ -26,24 +27,31 @@ class AuthController extends Controller
     public function register_new(Request $request)
     {
 
-    Log::info('Login request data:', $request->all());
+    Log::info('Register user data:', $request->all());
         
       $fields= $request->validate([
         'name'=>'required|max:255',
+        'last_name'=>'required|max:255',
         'email'=>['required', 'email'],
         'email_verified_at'=>now(),
         'password'=>'required',
-       
-
-      ]);
     
+      ]);
+    try{
       $user= User::create($fields);
       $token = $user->createToken($request->name);
-
+    
       return[
         'user'=> $user,
         'token'=>$token->plainTextToken
       ];
+    }catch (QueryException $e) {
+        if ($e->getCode() === '23000') { // Integrity constraint violation
+            return response()->json(['message' => 'Email already in use'], 409);
+        }
+
+        return response()->json(['message' => 'An unexpected error occurred'], 500);
+    }
     }
     public function login_new(Request $request){
         
