@@ -3,7 +3,7 @@
 
 The folder structure is as follows : \
  Laravel-vue-ecomm - hosts the laravel application \
- laravel-vue-ecomm/backend - hosts the vuejs application \
+ laravel-vue-ecomm/backend - hosts the vuejs application 
  
  The laravel application serves data to the vue appliaction via RestFul APIs. \
  The VueJs App is version Vue3
