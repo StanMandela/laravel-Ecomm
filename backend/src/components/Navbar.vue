@@ -71,7 +71,7 @@ import store  from '../store';
 import router from '../router';
 import {computed} from 'vue';
 
-const currentUser = computed( ()=>store.state.user.data)
+const currentUser = computed(()=>store.state.user.data)
 
 
 const emit = defineEmits(['toggle-sidebar'])

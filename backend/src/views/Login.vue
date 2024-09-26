@@ -2,8 +2,24 @@
   <GuestLayout title="Sign in to your account">
     <form class="space-y-6" method="POST" @submit.prevent="login">
       <div>
-        <div v-if="errorMsg" class="flex items-center justify-center py-3 bg-red-500 text-white rounded">
+        <div v-if="errorMsg" class="flex items-center justify-between py-3  px-5 bg-red-500 text-white rounded">
           {{ errorMsg }}
+          <span @click="errorMsg=''"class="w-8 h-8 flex items-center justify-between rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
+            <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+          </span>
         </div>
         <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
         <div class="mt-2">
