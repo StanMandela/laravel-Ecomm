@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
+use App\Http\Resources\ProductListResource;
+use App\Http\Resources\ProductsResource;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -21,7 +23,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        return Products::all();
+        return ProductListResource::collection(Products::query()->paginate(10));
     }
 
     /**
@@ -29,15 +31,16 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-      $fields=  $request->validate([
-            'title'=>'required|max:255',
-            'description'=>'required',
-            'slug'=>'required',
-            'price'=>'required',
-    ]);
-    //
-    $product= $request->user()->products()->create($fields);
-        return $product;
+    //   $fields=  $request->validate([
+    //         'title'=>'required|max:255',
+    //         'description'=>'required',
+    //         'slug'=>'required',
+    //         'price'=>'required',
+    // ]);
+    // //
+    // $product= $request->user()->products()->create($fields);
+    //     return $product;
+    return new ProductsResource(Products::create($request->validate()));
     }
 
     /**
@@ -45,7 +48,7 @@ class ProductsController extends Controller
      */
     public function show(Products $product)
     {
-        return $product;
+        new ProductsResource($product);
     }
 
     /**
@@ -53,16 +56,19 @@ class ProductsController extends Controller
      */
     public function update(Request $request, Products $product)
     {
-        Gate::authorize('modify',$product);
-        $fields=  $request->validate([
-            'title'=>'required|max:255',
-            'description'=>'required',
-            'slug'=>'required',
-            'price'=>'required',
-    ]);
-         $product->update($fields);
-        return $product;
-    
+    //     Gate::authorize('modify',$product);
+    //     $fields=  $request->validate([
+    //         'title'=>'required|max:255',
+    //         'description'=>'required',
+    //         'slug'=>'required',
+    //         'price'=>'required',
+    // ]);
+    //      $product->update($fields);
+    //     return $product;
+        $product ->update($request->validate());
+        return new ProductsResource($product);
+
+
     }
 
     /**
@@ -70,8 +76,10 @@ class ProductsController extends Controller
      */
     public function destroy(Products $product)
     {
-        Gate::authorize('modify',$product);
-        $product-> delete();
-         return ['Message'=> "Deleted Post ".$product["id"]];
+        // Gate::authorize('modify',$product);
+        // $product-> delete();
+        //  return ['Message'=> "Deleted Post ".$product["id"]];
+        $product->delete();
+        return response()->noContent();
     }
 }
