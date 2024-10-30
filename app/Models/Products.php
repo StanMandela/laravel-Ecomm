@@ -26,10 +26,14 @@ class Products extends Model
      public function user(){
       return $this->belongsTo(User::class);
      }
+
      public function getSlugOptions(): SlugOptions
      {
+
       return SlugOptions::create()
          ->generateSlugsFrom('title')
          ->saveSlugsTo('slug');
      }
+     
 }
+

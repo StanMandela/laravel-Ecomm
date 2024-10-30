@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function register_new(Request $request)
     {
 
-    Log::info('Register user data:', $request->all());
+   // Log::info('Register user data:', $request->all());
         
       $fields= $request->validate([
         'name'=>'required|max:255',
@@ -47,7 +47,12 @@ class AuthController extends Controller
       ];
     }catch (QueryException $e) {
         if ($e->getCode() === '23000') { // Integrity constraint violation
-            return response()->json(['message' => 'Email already in use'], 409);
+            return response()->json([
+                'status'=> false,
+                'message' => 'Email already in use'
+            ], 409);
+            Log::error('error occured:', $e);
+
         }
 
         return response()->json(['message' => 'An unexpected error occurred'], 500);
