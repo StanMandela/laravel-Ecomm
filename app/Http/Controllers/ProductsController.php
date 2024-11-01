@@ -81,18 +81,27 @@ class ProductsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Products $product)
+    public function update(ProductsRequest $request, Products $product)
     {
-    //     Gate::authorize('modify',$product);
-    //     $fields=  $request->validate([
-    //         'title'=>'required|max:255',
-    //         'description'=>'required',
-    //         'slug'=>'required',
-    //         'price'=>'required',
-    // ]);
-    //      $product->update($fields);
-    //     return $product;
-        $product ->update($request->validate());
+        $data = $request->validated();
+        $data['updated_by'] = $request->user()->id;
+
+        /** @var \Illuminate\Http\UploadedFile $image */
+        $image = $data['image'] ?? null;
+        // Check if image was given and save on local file system
+        if ($image) {
+            $relativePath = $this->saveImage($image);
+            $data['image'] = URL::to(Storage::url($relativePath));
+            $data['image_mime'] = $image->getClientMimeType();
+            $data['image_size'] = $image->getSize();
+
+            // If there is an old image, delete it
+            if ($product->image) {
+                Storage::deleteDirectory('/public/' . dirname($product->image));
+            }
+        }
+
+        $product->update($data);
         return new ProductsResource($product);
 
 

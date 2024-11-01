@@ -111,10 +111,10 @@ onUpdated(() => {
     price: props.product.price
   }
 })
-  const isOpen = ref(true)
   
   function closeModal() {
-    isOpen.value = false
+    show.value = false
+    emit('close')
   }
   const show = computed({
   get: () => props.modelValue,

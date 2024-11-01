@@ -60,8 +60,8 @@ export function login({commit}, data) {
   }
 
   export function updateProduct({commit}, product) {
-    const id = product.id
-    //check if Image if loaded
+    const id = product.id;
+  
     if (product.image instanceof File) {
       const form = new FormData();
       form.append('id', product.id);
@@ -69,12 +69,25 @@ export function login({commit}, data) {
       form.append('image', product.image);
       form.append('description', product.description);
       form.append('price', product.price);
-      form.append('_method', 'PUT');
+      form.append('_method', 'PUT'); // Necessary for PUT request via POST
+  
       product = form;
+  
+      return axiosClient.post(`/product/${id}`, product, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+    } else {
+      // For cases without an image, send a JSON payload
+      return axiosClient.put(`/product/${id}`, product);
     }
-    return axiosClient.post(`/product/${id}`, product)
   }
 
   export function deleteProduct({commit}, id) {
     return axiosClient.delete(`/product/${id}`)
+  }
+
+  export function getProduct({},id){
+    return axiosClient.get(`/product/${id}`)
   }
