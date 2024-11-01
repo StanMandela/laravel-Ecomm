@@ -15,17 +15,9 @@ class Products extends Model
     use HasSlug;
     use  SoftDeletes;
 
-     protected $fillable =[
-      'title',
-        'description',
-        'slug',
-        'price',
-        'slug'
-     ];
+    protected $fillable = ['title', 'description', 'price', 'image', 'image_mime', 'image_size', 'created_by', 'updated_by'];
 
-     public function user(){
-      return $this->belongsTo(User::class);
-     }
+   
 
      public function getSlugOptions(): SlugOptions
      {

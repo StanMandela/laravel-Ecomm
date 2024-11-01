@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Gate;
 use App\Helpers\ApiHelper;
 use App\Services\FineractService;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class ProductsController extends Controller 
 {   
@@ -30,26 +33,42 @@ class ProductsController extends Controller
      */
     public function index()
     {
-       
-        return ProductListResource::collection(Products::query()->paginate(10));
+        $search = request('search',false);
+        $perPage = request('per_page',10);
+        $sortField= request('sort_field','updated_at');
+        $sortDirection= request('sort_direction','desc');
+        $query = Products::query();
+        $query->orderBy($sortField,$sortDirection);
+        if($search){
+            $query->where('title','like',"%{$search}%")
+            ->orWhere('description','like',"%{$search}%");
+        }       
+        return ProductListResource::collection($query->paginate($perPage));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductsRequest $request)
     {
-            //   $fields=  $request->validate([
-            //         'title'=>'required|max:255',
-            //         'description'=>'required',
-            //         'slug'=>'required',
-            //         'price'=>'required',
-            // ]);
-            // //
-            // $product= $request->user()->products()->create($fields);
-            //     return $product;
-    return new ProductsResource(Products::create($request->validate()));
+        $data = $request->validated();
+        $data['created_by'] = $request->user()->id;
+        $data['updated_by'] = $request->user()->id;
+
+    /** @var \Illuminate\Http\UploadedFile $image */
+    $image = $data['image'] ?? null;
+    // Check if image was given and save on local file system
+    if ($image) {
+        $relativePath = $this->saveImage($image);
+        $data['image'] = URL::to(Storage::url($relativePath));
+        $data['image_mime'] = $image->getClientMimeType();
+        $data['image_size'] = $image->getSize();
     }
+
+    $product = Products::create($data);
+
+    return new ProductsResource($product);  
+  }
 
     /**
      * Display the specified resource.
@@ -126,4 +145,17 @@ class ProductsController extends Controller
     return response()->json($response, 200);
 
 }
+private function saveImage(UploadedFile $image)
+    {
+        $path = 'images/' . Str::random();
+        if (!Storage::exists($path)) {
+            Storage::makeDirectory($path, 0755, true);
+        }
+        if (!Storage::putFileAS('public/' . $path, $image, $image->getClientOriginalName())) {
+            throw new \Exception("Unable to save file \"{$image->getClientOriginalName()}\"");
+        }
+
+        return $path . '/' . $image->getClientOriginalName();
+    }
+
 }

@@ -27,9 +27,17 @@ export function login({commit}, data) {
       })
   }
 
-  export function getProducts({commit}){
+  export function getProducts({commit},{url=null, search='', perPage=10,sort_field, sort_direction}={}){
     commit('setProducts', [true])
-    return axiosClient.get('/product')
+    url =url ||'/product'
+    return axiosClient.get(url,{
+      params:{
+        search,
+        per_page:perPage,
+        sort_field,
+        sort_direction
+  }
+    })
     .then(res=>{
       commit('setProducts', [false,res.data])
     })
@@ -37,4 +45,36 @@ export function login({commit}, data) {
       commit('setProducts', [false])
     })
   
+  }
+
+  export function  createProduct({commit}, product) {
+    if (product.image instanceof File) {
+      const form = new FormData();
+      form.append('title', product.title);
+      form.append('image', product.image);
+      form.append('description', product.description);
+      form.append('price', product.price);
+      product = form;
+    }
+    return axiosClient.post('/product', product)
+  }
+
+  export function updateProduct({commit}, product) {
+    const id = product.id
+    //check if Image if loaded
+    if (product.image instanceof File) {
+      const form = new FormData();
+      form.append('id', product.id);
+      form.append('title', product.title);
+      form.append('image', product.image);
+      form.append('description', product.description);
+      form.append('price', product.price);
+      form.append('_method', 'PUT');
+      product = form;
+    }
+    return axiosClient.post(`/product/${id}`, product)
+  }
+
+  export function deleteProduct({commit}, id) {
+    return axiosClient.delete(`/product/${id}`)
   }

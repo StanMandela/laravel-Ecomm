@@ -16,6 +16,10 @@ export const setToken = (state, token) => {
 }
 
 export function setProducts(state, [loading, data = null]) {
+   // Ensure state.products is initialized
+   if (!state.products) {
+    state.products = {};
+  }
 
   if (data) {
     state.products = {
