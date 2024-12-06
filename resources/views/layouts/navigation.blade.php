@@ -159,10 +159,9 @@
                 </a>
               </li>
               <li class="hover:bg-slate-900">
-                <a
-                  href="/src/logout.html"
-                  class="flex items-center px-3 py-2 hover:bg-slate-900"
-                >
+                  <form action="{{route('logout')}}" method="POST">
+                  @csrf
+                  <button type="submit"  class="flex  w-full items-center px-3 py-2 hover:bg-slate-900">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5 mr-2"
@@ -178,7 +177,8 @@
                     />
                   </svg>
                   Logout
-                </a>
+                  </button>
+                </form>
               </li>
             </ul>
           </li>
@@ -207,7 +207,7 @@
           </li>
           <li class="px-3 py-3">
             <a
-              href="/src/signup.html"
+              href="{{route('register')}}"
               class="block text-center text-white bg-emerald-600 py-2 px-3 rounded shadow-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors w-full"
             >
               Register now
@@ -368,10 +368,9 @@
                 </a>
               </li>
               <li>
-                <a
-                  href="/src/logout.html"
-                  class="flex px-3 py-2 hover:bg-slate-900"
-                >
+                <form action="{{route('logout')}}" method="POST">
+                  @csrf
+                  <button type="submit"  class="flex  w-full px-3 py-2 hover:bg-slate-900">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5 mr-2"
@@ -387,14 +386,16 @@
                     />
                   </svg>
                   Logout
-                </a>
+                  </button>
+                </form>
+           
               </li>
             </ul>
           </li>
           @else
           <li>
             <a
-              href="/src/login.html"
+              href="{{route('login')}}"
               class="flex items-center py-navbar-item px-navbar-item hover:bg-slate-900"
             >
               <svg
@@ -416,7 +417,7 @@
           </li>
           <li>
             <a
-              href="/src/signup.html"
+              href="{{route('register')}}"
               class="inline-flex items-center text-white bg-emerald-600 py-2 px-3 rounded shadow-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors mx-5"
             >
               Register now
