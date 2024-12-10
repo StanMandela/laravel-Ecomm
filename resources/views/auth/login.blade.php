@@ -9,8 +9,7 @@
           <a
             href="{{route('register')}}"
             class="text-sm text-purple-700 hover:text-purple-600"
-            >create new account</a
-          >
+            >create new account</a>
         </p>
         <x-auth-validation-errors class="mb-4" :errors="$errors"/>
         <div class="mb-4">

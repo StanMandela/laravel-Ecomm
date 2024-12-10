@@ -18,7 +18,6 @@
                 login with existing account
             </a>
         </p>
-
         <div class="mb-3">
             <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
                      autofocus placeholder="Enter your Email Address"/>
