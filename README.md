@@ -2,6 +2,7 @@
 
 
 The folder structure is as follows : \
+
  Laravel-vue-ecomm - hosts the laravel application \
  laravel-vue-ecomm/backend - hosts the vuejs application 
  
