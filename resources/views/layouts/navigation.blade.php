@@ -128,6 +128,7 @@
                   </svg>
                   Watchlist
                   <small
+                  
                     x-show="$store.header.watchlistItems"
                     x-transition
                     x-text="$store.header.watchlistItems"

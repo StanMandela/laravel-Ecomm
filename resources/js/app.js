@@ -7,6 +7,7 @@ import collapse from '@alpinejs/collapse'
 Alpine.plugin(persist)
 Alpine.plugin(collapse)
 
+
 window.Alpine = Alpine;
 document.addEventListener("alpine:init", () => {
     Alpine.store("header", {
