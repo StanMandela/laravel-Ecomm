@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
+use App\Mail\MyEmail;
+use Illuminate\Support\Facades\Mail;
 
 
 class AuthController extends Controller
@@ -98,5 +100,14 @@ class AuthController extends Controller
 
         return new UserResource($request->user());
     }
-  
+    public function sendTestEmail()
+    {
+        $data = [
+            'name' => 'John Doe',
+        ];
+    
+        Mail::to('recipient@example.com')->send(new MyEmail($data));
+    
+        return "Test email sent!";
+    }
 }

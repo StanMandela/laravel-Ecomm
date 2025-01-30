@@ -1,9 +1,17 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Mail\MyEmail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
+
 
 Route::get('/', [\App\Http\Controllers\ProductController::class,'index'])->name('home');
+// create route to send email
+Route::get('/send-test-email', function () {
+    Mail::to('test@example.com')->send(new MyEmail());
+    return 'Test email has been sent!';
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
