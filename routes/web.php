@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Mail;
 
 
 Route::get('/', [\App\Http\Controllers\ProductController::class,'index'])->name('home');
+Route::get('/product/{product:slug}', [\App\Http\Controllers\ProductsController::class, 'show'])->name('product.show');
+
+
 // create route to send email
 Route::get('/send-test-email', function () {
     Mail::to('test@example.com')->send(new MyEmail());

@@ -26,6 +26,10 @@ class Products extends Model
          ->generateSlugsFrom('title')
          ->saveSlugsTo('slug');
      }
+     public function getRouteKey()
+     {
+        return 'slug';
+     }
      
 }
 

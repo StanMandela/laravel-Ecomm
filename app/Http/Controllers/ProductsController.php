@@ -75,7 +75,7 @@ class ProductsController extends Controller
      */
     public function show(Products $product)
     {
-      return  new ProductsResource($product);
+        return view('products.view', ['product' => $product]);
     }
 
     /**

@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class EmailVerificationNotificationController extends Controller
 {
+    public function __construct()
+{
+    $this->middleware('auth');
+}
     /**
      * Send a new email verification notification.
      */
