@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductsRequest;
 use App\Http\Resources\ProductListResource;
 use App\Http\Resources\ProductsResource;
-use App\Models\Products;
+use App\Models\Api\Products;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware; 
@@ -75,6 +75,9 @@ class ProductsController extends Controller
      */
     public function show(Products $product)
     {
+        // echo '<pre>';
+        // var_dump($product);
+        // echo '</pre>';
         return view('products.view', ['product' => $product]);
     }
 
