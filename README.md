@@ -1,7 +1,7 @@
 # A simple Laravel App 
 
 
-The folder structure is as follows : 
+The folder structure is as follows: 
 
  Laravel-vue-ecomm - hosts the laravel application \
  laravel-vue-ecomm/backend - hosts the vuejs application 
